@@ -1,0 +1,42 @@
+version: "3.9"
+
+services:
+  drupal:
+    build: .
+    container_name: drupal
+    restart: always
+    ports:
+      - "8080:80"
+    volumes:
+      - drupal-data:/var/www/html
+    depends_on:
+      - db
+    environment:
+      - DRUPAL_DATABASE_HOST=db
+      - DRUPAL_DATABASE_PORT=3306
+      - DRUPAL_DATABASE_USER=drupal
+      - DRUPAL_DATABASE_PASSWORD=drupal
+      - DRUPAL_DATABASE_NAME=drupal
+
+  db:
+    image: mysql:8
+    container_name: drupal-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: drupal
+      MYSQL_USER: drupal
+      MYSQL_PASSWORD: drupal
+    volumes:
+      - db-data:/var/lib/mysql
+
+  adminer:
+    image: adminer
+    container_name: adminer
+    restart: always
+    ports:
+      - "8081:8080"
+
+volumes:
+  drupal-data:
+  db-data:
