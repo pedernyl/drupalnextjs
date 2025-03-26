@@ -8,10 +8,3 @@ COPY composer.json composer.lock ./
 
 RUN composer install
 
-# Kopiera installationsskriptet och göra det körbart
-COPY install-drupal.sh /install-drupal.sh
-RUN chmod +x /install-drupal.sh
-
-# Kör skriptet vid uppstart
-#CMD ["/bin/bash", "/install-drupal.sh"]
-#CMD ["/bin/bash"]
