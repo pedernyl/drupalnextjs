@@ -115,11 +115,11 @@ if ! docker exec drupal drush status --field=bootstrap | grep -q "Successful"; t
   echo "✅ Permissions and ownership set!"
   
   docker exec "$DRUPAL_CONTAINER" drush site-install standard \
-    --site-name=$sitename \
-    --account-name=$username \
-    --account-pass=$password \
-    --db-url=mysql://root:root@drupal-db/drupal \
-    -y
+  --site-name="$sitename" \
+  --account-name="$username" \
+  --account-pass="$password" \
+  --db-url="mysql://drupal:drupal@db/drupal" \
+  -y
 
   #adding graphql
   echo "Installing GraphQL module via Composer..."
