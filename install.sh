@@ -124,6 +124,19 @@ if ! docker exec drupal drush status --field=bootstrap | grep -q "Successful"; t
   --db-url="mysql://drupal:drupal@db/drupal" \
   -y
 
+ echo "🔒 Konfigurerar trusted_host_patterns i settings.php..."
+ echo "🔒 Skriver korrekt trusted_host_patterns-block direkt med PHP..."
+
+docker exec "$DRUPAL_CONTAINER" php -r '
+  $file = "/var/www/html/sites/default/settings.php";
+  $code = "\n\$settings[\"trusted_host_patterns\"] = [\n  \"^localhost$\",\n  \"^127\\.0\\.0\\.1$\",\n];\n";
+  $existing = file_get_contents($file);
+  // Ta bort tidigare block (om de finns)
+  $existing = preg_replace("/\\\$settings\\[\"trusted_host_patterns\"\\]\s*=\s*\[[^\]]*\];/s", "", $existing);
+  file_put_contents($file, $existing . $code);
+'
+
+
   #adding graphql
   echo "Installing GraphQL module via Composer..."
   docker exec "$DRUPAL_CONTAINER" composer require drupal/graphql  
@@ -135,3 +148,9 @@ if ! docker exec drupal drush status --field=bootstrap | grep -q "Successful"; t
 else
   echo "Drupal is already installed. Skipping installation."
 fi
+
+echo "Checking for updates"
+docker exec "$DRUPAL_CONTAINER" drush cron
+
+
+
