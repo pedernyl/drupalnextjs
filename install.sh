@@ -59,6 +59,9 @@ while [[ "$#" -gt 0 ]]; do
     shift
 done
 
+echo "🔧 Rebuilding container with custom php.ini..."
+docker compose build --no-cache
+
 # Start Docker containers in the background
 echo "Starting Docker containers..."
 docker compose up -d
